@@ -18,7 +18,7 @@ export default function Page() {
       {/* MAIN LAYOUT */}
       <div className="max-w-7xl mx-auto flex items-start border-t border-gray-300">
         {/* SIDEBAR */}
-        <div className="w-[250px] border-r border-gray-300 h-fit">
+        <div className="w-[250] border-r border-gray-300 h-fit">
           <Sidebar />
         </div>
 

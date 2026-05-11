@@ -1,10 +1,19 @@
+import { useRouter } from "next/navigation";
+
 type Props = {
   subtitle: string;
   title: string;
   button?: boolean;
+  link?: string;
 };
 
-export default function SectionHeader({ subtitle, title, button }: Props) {
+export default function SectionHeader({
+  subtitle,
+  title,
+  button,
+  link,
+}: Props) {
+  const router = useRouter();
   return (
     <div className="flex items-center justify-between mb-8">
       <div className="flex flex-col gap-1">
@@ -24,7 +33,10 @@ export default function SectionHeader({ subtitle, title, button }: Props) {
       </div>
 
       {button && (
-        <button className="bg-[#DB4444] text-white px-6 py-3 rounded-md hover:bg-[#c93a3a] transition">
+        <button
+          onClick={() => link && router.push(link)}
+          className="bg-[#DB4444] text-white px-6 py-3 rounded-md hover:bg-[#c93a3a] transition"
+        >
           View All
         </button>
       )}

@@ -1,13 +1,12 @@
 "use client";
 
 import CategoryCard from "./CategoryCard";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import SectionHeader from "@/components/products/SectionHeader";
 import { categories } from "@/data/categories";
 
 export default function CategorySection() {
   const scrollRef = useRef<HTMLDivElement>(null);
-
   const scroll = (dir: "left" | "right") => {
     if (!scrollRef.current) return;
 
