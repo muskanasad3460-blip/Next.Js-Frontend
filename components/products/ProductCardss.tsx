@@ -3,10 +3,18 @@
 import Image from "next/image";
 import { FaEye, FaHeart } from "react-icons/fa";
 import Rating from "@/components/FlashSales/Rating";
+import { useRouter } from "next/navigation";
 
 export default function ProductCardss({ item }: any) {
+  const router = useRouter();
+  const imageSrc = item.image
+    ? `http://localhost:5000${item.image}`
+    : "/placeholder.png";
   return (
-    <div className="group min-w-[250px] shrink-0">
+    <div
+      className="group min-w-[250px] shrink-0"
+      onClick={() => router.push(`/product/${item.id}`)}
+    >
       <div className="relative bg-gray-100 p-4 rounded overflow-hidden">
         {/* Icons */}
         <div className="absolute top-3 right-3 flex flex-col gap-2 z-10">
@@ -21,11 +29,17 @@ export default function ProductCardss({ item }: any) {
 
         {/* Image (backend image fix) */}
         <div className="flex justify-center">
-          <Image
+          {/* <Image
             src={`${process.env.NEXT_PUBLIC_API_URL}${item.image || item.img}`}
             alt={item.name}
             width={160}
             height={160}
+            className="object-contain"
+          /> */}
+          <img
+            src={imageSrc}
+            alt={item.name}
+            width={160}
             className="object-contain"
           />
         </div>

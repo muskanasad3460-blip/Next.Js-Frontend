@@ -5,7 +5,7 @@ export interface FlashProducts {
   discount: string;
   rating: number;
   reviews: number;
-  img: string;
+  image: string;
 }
 export const products: FlashProducts[] = [
   {
@@ -15,7 +15,7 @@ export const products: FlashProducts[] = [
     discount: "-40%",
     rating: 4.5,
     reviews: 88,
-    img: "/N6.jpg",
+    image: "/N6.jpg",
   },
   {
     name: "Keyboard",
@@ -24,7 +24,7 @@ export const products: FlashProducts[] = [
     discount: "-35%",
     rating: 4,
     reviews: 75,
-    img: "/n2.jpg",
+    image: "/n2.jpg",
   },
   {
     name: "Monitor",
@@ -33,7 +33,7 @@ export const products: FlashProducts[] = [
     discount: "-30%",
     rating: 5,
     reviews: 99,
-    img: "/n4.jpg",
+    image: "/n4.jpg",
   },
   {
     name: "Chair",
@@ -42,6 +42,6 @@ export const products: FlashProducts[] = [
     discount: "-25%",
     rating: 3.5,
     reviews: 45,
-    img: "/n1.jpg",
+    image: "/n1.jpg",
   },
 ];

@@ -12,7 +12,7 @@ export default function ProductSection() {
     const fetchProducts = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/best-selling/best-selling-products`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/products/best-selling`
         );
         const data = await res.json();
         setProducts(data);

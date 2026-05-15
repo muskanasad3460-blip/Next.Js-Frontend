@@ -13,7 +13,7 @@ export default function Page() {
   return (
     <div>
       {/* Navbar */}
-      <Navbar />
+      {/* <Navbar /> */}
 
       {/* MAIN LAYOUT */}
       <div className="max-w-7xl mx-auto flex items-start border-t border-gray-300">

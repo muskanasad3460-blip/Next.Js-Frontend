@@ -9,7 +9,7 @@ export default function BestSellingPage() {
     const fetchProducts = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/best-selling-products`
+          `${process.env.NEXT_PUBLIC_API_URL}/apiproducts//best-selling`
         );
         const data = await res.json();
 

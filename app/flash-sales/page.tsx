@@ -9,7 +9,7 @@ export default function FlashSalesPage() {
     const fetchProducts = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/flash-sale-products`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/products/flash-sale`
         );
         const data = await res.json();
         setProducts(data);

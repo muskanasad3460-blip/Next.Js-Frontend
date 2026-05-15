@@ -1,18 +1,30 @@
 const nextConfig = {
   images: {
     remotePatterns: [
+      // LOCAL BACKEND IMAGES
       {
         protocol: "http",
         hostname: "localhost",
         port: "5000",
-        pathname: "/**",
+        pathname: "/uploads/**",
       },
+
+      {
+        protocol: "http",
+        hostname: "127.0.0.1",
+        port: "5000",
+        pathname: "/uploads/**",
+      },
+
+      // UNSPLASH IMAGES
       {
         protocol: "https",
         hostname: "images.unsplash.com",
+        pathname: "/**",
       },
     ],
+    dangerouslyAllowLocalIP: true,
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
