@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { Heart, Minus, Plus, Truck, RotateCcw } from "lucide-react";
+import { useCart } from "@/context/CartContext";
 
 const sizes = ["XS", "S", "M", "L", "XL"];
 
@@ -22,8 +23,9 @@ export default function ProductPage() {
   const [selectedColor, setSelectedColor] = useState(colors[0]);
 
   const [qty, setQty] = useState(1);
+  const router = useRouter();
+  const { setBuyNowItem, clearCart } = useCart();
 
-  //
   // FETCH PRODUCT
   //
   useEffect(() => {
@@ -200,7 +202,22 @@ export default function ProductPage() {
             </div>
 
             {/* BUY */}
-            <button className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-xl font-medium">
+            {/* BUY */}
+            <button
+              className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-xl font-medium"
+              onClick={(e) => {
+                e.stopPropagation();
+
+                clearCart();
+
+                setBuyNowItem({
+                  ...product,
+                  quantity: qty,
+                });
+
+                router.push("/checkout");
+              }}
+            >
               Buy Now
             </button>
 

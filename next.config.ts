@@ -1,5 +1,6 @@
 const nextConfig = {
   images: {
+    domains: ["i.pravatar.cc"],
     remotePatterns: [
       // LOCAL BACKEND IMAGES
       {
