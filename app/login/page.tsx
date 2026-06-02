@@ -5,7 +5,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { FiMail, FiLock } from "react-icons/fi";
 
-const API = "http://localhost:5000";
+const API = "https://3b1e-39-35-157-120.ngrok-free.app";
 
 export default function LoginPage() {
   const router = useRouter();

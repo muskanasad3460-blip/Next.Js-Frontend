@@ -31,7 +31,9 @@ export default function ProductPage() {
   useEffect(() => {
     async function fetchProduct() {
       try {
-        const res = await fetch(`http://localhost:5000/api/products/${id}`);
+        const res = await fetch(
+          `https://3b1e-39-35-157-120.ngrok-free.app/api/products/${id}`
+        );
 
         const data = await res.json();
 
@@ -39,9 +41,13 @@ export default function ProductPage() {
 
         // ✅ MAIN IMAGE FROM MULTIPLE IMAGES
         if (data.images && data.images.length > 0) {
-          setMainImage(`http://localhost:5000${data.images[0].url}`);
+          setMainImage(
+            `https://3b1e-39-35-157-120.ngrok-free.app${data.images[0].url}`
+          );
         } else if (data.image) {
-          setMainImage(`http://localhost:5000${data.image}`);
+          setMainImage(
+            `https://3b1e-39-35-157-120.ngrok-free.app${data.image}`
+          );
         } else {
           setMainImage("/n1.jpg");
         }
@@ -71,9 +77,11 @@ export default function ProductPage() {
   //
   const images =
     product?.images?.length > 0
-      ? product.images.map((img: any) => `http://localhost:5000${img.url}`)
+      ? product.images.map(
+          (img: any) => `https://3b1e-39-35-157-120.ngrok-free.app${img.url}`
+        )
       : product?.image
-      ? [`http://localhost:5000${product.image}`]
+      ? [`https://3b1e-39-35-157-120.ngrok-free.app${product.image}`]
       : ["/n1.jpg"];
 
   return (

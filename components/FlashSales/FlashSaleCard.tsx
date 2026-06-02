@@ -26,7 +26,7 @@ export default function ProductCard({ item }: { item: Product }) {
   const isAdded = cart.some((cartItem: any) => cartItem.id === item.id);
 
   const imageSrc = item.image
-    ? `http://localhost:5000${item.image}`
+    ? `https://3b1e-39-35-157-120.ngrok-free.app${item.image}`
     : "/n1.jpg";
 
   return (

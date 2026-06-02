@@ -75,7 +75,7 @@ export default function CartSidebar() {
               const imageSrc = item.image
                 ? item.image.startsWith("http")
                   ? item.image
-                  : `http://localhost:5000${item.image}`
+                  : `https://3b1e-39-35-157-120.ngrok-free.app${item.image}`
                 : "/n1.jpg";
 
               return (

@@ -42,7 +42,9 @@ export default function ExploreProductsPage() {
   const getImageSrc = (image?: string) => {
     if (!image) return "/placeholder.png";
 
-    return image.startsWith("http") ? image : `http://localhost:5000${image}`;
+    return image.startsWith("http")
+      ? image
+      : `https://3b1e-39-35-157-120.ngrok-free.app${image}`;
   };
 
   return (

@@ -59,12 +59,15 @@ export default function Navbar() {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await fetch("http://localhost:5000/api/user/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        credentials: "include",
-      });
+      const res = await fetch(
+        "https://3b1e-39-35-157-120.ngrok-free.app/api/user/me",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        }
+      );
 
       const data = await res.json();
 
@@ -148,7 +151,7 @@ export default function Navbar() {
                     <img
                       src={
                         user?.avatar
-                          ? `http://localhost:5000${user.avatar}`
+                          ? `https://3b1e-39-35-157-120.ngrok-free.app${user.avatar}`
                           : "/c1.jpg"
                       }
                       className="w-[45px] h-[45px] rounded-full object-cover"
@@ -177,7 +180,7 @@ export default function Navbar() {
                         <img
                           src={
                             user?.avatar
-                              ? `http://localhost:5000${user.avatar}`
+                              ? `https://3b1e-39-35-157-120.ngrok-free.app${user.avatar}`
                               : "/c1.jpg"
                           }
                           className="w-[48px] h-[48px] rounded-full border-2 border-white object-cover"

@@ -14,7 +14,7 @@ export default function ProductCardss({ item }: any) {
 
   // ✅ IMAGE FIX
   const imageSrc = item.image
-    ? `http://localhost:5000${item.image}`
+    ? `https://3b1e-39-35-157-120.ngrok-free.app${item.image}`
     : "/placeholder.png";
 
   const isAdded = cart.some((cartItem: any) => cartItem.id === item.id);

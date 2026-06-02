@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-const API = "http://localhost:5000";
+const API = "https://3b1e-39-35-157-120.ngrok-free.app";
 
 export default function RegisterPage() {
   const router = useRouter();

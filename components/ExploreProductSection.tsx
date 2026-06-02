@@ -7,7 +7,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaEye, FaHeart, FaRegStar, FaStar } from "react-icons/fa";
 import { IoArrowBack, IoArrowForward } from "react-icons/io5";
 
-const API = "http://localhost:5000";
+const API = "https://3b1e-39-35-157-120.ngrok-free.app";
 
 function RatingStars({ rating }: { rating: number }) {
   return (

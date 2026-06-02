@@ -16,7 +16,9 @@ export default function OrdersPage() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/orders");
+      const res = await fetch(
+        "https://3b1e-39-35-157-120.ngrok-free.app/api/orders"
+      );
       const data = await res.json();
 
       if (!res.ok) return toast.error(data.message);
@@ -31,9 +33,12 @@ export default function OrdersPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/orders/${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `https://3b1e-39-35-157-120.ngrok-free.app/api/orders/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       const data = await res.json();
 
@@ -118,7 +123,7 @@ export default function OrdersPage() {
               const imageSrc = firstProduct?.image
                 ? firstProduct.image.startsWith("http")
                   ? firstProduct.image
-                  : `http://localhost:5000${firstProduct.image}`
+                  : `https://3b1e-39-35-157-120.ngrok-free.app${firstProduct.image}`
                 : "/n1.jpg";
 
               return (
@@ -175,7 +180,7 @@ export default function OrdersPage() {
                       onClick={() => handleDelete(order.id)}
                       className="px-4 h-11 bg-red-500 text-white rounded-xl"
                     >
-                      Delete
+                      Cancel
                     </button>
                   </div>
                 </div>

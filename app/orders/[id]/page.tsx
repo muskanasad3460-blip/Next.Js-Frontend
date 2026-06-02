@@ -19,7 +19,9 @@ export default function OrderDetailsPage() {
 
     const fetchOrder = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/orders/${id}`);
+        const res = await fetch(
+          `https://3b1e-39-35-157-120.ngrok-free.app/api/orders/${id}`
+        );
 
         const data = await res.json();
 
@@ -74,7 +76,7 @@ export default function OrderDetailsPage() {
             const imageSrc = product.image
               ? product.image.startsWith("http")
                 ? product.image
-                : `http://localhost:5000${product.image}`
+                : `https://3b1e-39-35-157-120.ngrok-free.app${product.image}`
               : "/n1.jpg";
 
             return (
