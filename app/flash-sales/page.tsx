@@ -1,26 +1,20 @@
 "use client";
 
 import ProductCard from "@/components/FlashSales/FlashSaleCard";
+import { getFlashSaleProducts } from "@/src/lib/Product";
 import React, { useEffect, useState } from "react";
 
 export default function FlashSalesPage() {
   const [products, setProducts] = useState([]);
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/products/flash-sale`
-        );
-        const data = await res.json();
-        setProducts(data);
-      } catch (error) {
-        console.log(error);
-      }
+    const loadProducts = async () => {
+      const data = await getFlashSaleProducts();
+      setProducts(data);
     };
-    fetchProducts();
+    loadProducts();
   }, []);
-  console.log(products);
-
+  console.log("Products:", products);
+  console.log("Count:", products.length);
   return (
     <div className="px-10 py-10">
       <h1 className="text-3xl font-bold mb-8"> All Flash Sale Products</h1>

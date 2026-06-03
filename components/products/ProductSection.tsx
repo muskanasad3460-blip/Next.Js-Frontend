@@ -3,24 +3,18 @@ import SectionHeader from "@/components/products/SectionHeader";
 import ProductCardss from "@/components/products/ProductCardss";
 import { BestSellingProducts } from "@/data/BestSellingProduct";
 import { useEffect, useRef, useState } from "react";
+import { getBestSellingProducts } from "@/src/lib/Product";
 
 export default function ProductSection() {
   const [products, setProducts] = useState<any[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/products/best-selling`
-        );
-        const data = await res.json();
-        setProducts(data);
-      } catch (error) {
-        console.log(error);
-      }
+    const loadProducts = async () => {
+      const data = await getBestSellingProducts();
+      setProducts(data);
     };
-    fetchProducts();
+    loadProducts();
   }, []);
 
   const scrollLeft = () => {

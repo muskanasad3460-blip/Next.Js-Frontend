@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaEye, FaHeart, FaRegStar, FaStar } from "react-icons/fa";
 
+import { getImageUrl } from "@/src/lib/image";
+import { getExploreProducts } from "@/src/lib/Product";
+
 function RatingStars({ rating }: { rating: number }) {
   return (
     <div className="flex items-center gap-[2px] text-[#FFAD33] text-sm">
@@ -22,30 +25,13 @@ export default function ExploreProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/products/explore`
-        );
-
-        const data = await res.json();
-        setProducts(data);
-      } catch (error) {
-        console.log(error);
-      }
+    const loadProducts = async () => {
+      const data = await getExploreProducts();
+      setProducts(data);
     };
 
-    fetchProducts();
+    loadProducts();
   }, []);
-
-  // ✅ SAFE IMAGE FUNCTION (BEST PRACTICE)
-  const getImageSrc = (image?: string) => {
-    if (!image) return "/placeholder.png";
-
-    return image.startsWith("http")
-      ? image
-      : `https://3b1e-39-35-157-120.ngrok-free.app${image}`;
-  };
 
   return (
     <div className="max-w-6xl mx-auto px-6 md:px-10 py-16">
@@ -57,18 +43,18 @@ export default function ExploreProductsPage() {
             <div className="relative bg-[#F5F5F5] rounded-md h-[260px] flex items-center justify-center overflow-hidden group">
               {/* ICONS */}
               <div className="absolute top-4 right-4 flex flex-col gap-3">
-                <button className="w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-sm hover:text-red-500">
+                <button className="w-9 h-9 bg-white rounded-full flex items-center justify-center">
                   <FaHeart size={14} />
                 </button>
 
-                <button className="w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-sm hover:text-red-500">
+                <button className="w-9 h-9 bg-white rounded-full flex items-center justify-center">
                   <FaEye size={14} />
                 </button>
               </div>
 
-              {/* IMAGE (FIXED) */}
+              {/* IMAGE */}
               <Image
-                src={getImageSrc(product.image)}
+                src={getImageUrl(product.image)}
                 alt={product.name}
                 width={180}
                 height={180}
@@ -76,19 +62,17 @@ export default function ExploreProductsPage() {
               />
 
               {/* ADD TO CART */}
-              <button className="absolute bottom-0 left-0 w-full bg-black text-white py-3 font-medium opacity-0 group-hover:opacity-100 transition duration-300">
+              <button className="absolute bottom-0 left-0 w-full bg-black text-white py-3 opacity-0 group-hover:opacity-100 transition">
                 Add To Cart
               </button>
             </div>
 
             {/* INFO */}
             <div className="mt-4">
-              <h3 className="font-semibold text-lg text-black mb-2">
-                {product.name}
-              </h3>
+              <h3 className="font-semibold text-lg">{product.name}</h3>
 
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-[#DB4444] font-semibold text-lg">
+              <div className="flex items-center gap-3">
+                <span className="text-[#DB4444] font-semibold">
                   ${product.price}
                 </span>
 

@@ -1,10 +1,9 @@
 "use client";
 
+import { sendOtp, verifyOtp } from "@/src/lib/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-
-const API = "https://3b1e-39-35-157-120.ngrok-free.app";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -25,28 +24,16 @@ export default function RegisterPage() {
     try {
       setLoading(true);
 
-      const res = await fetch(`${API}/api/auth/send-otp`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const { ok, data } = await sendOtp(name, email, password);
 
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
+      if (ok) {
         toast.success("OTP sent to your email");
         setOtpSent(true);
       } else {
         toast.error(data.message);
       }
     } catch (error) {
+      console.error(error);
       toast.error("Failed to send OTP");
     } finally {
       setLoading(false);
@@ -55,27 +42,13 @@ export default function RegisterPage() {
 
   // =========================
   // VERIFY OTP
-  // =========================
   const handleVerifyOtp = async () => {
     try {
       setLoading(true);
 
-      const res = await fetch(`${API}/api/auth/verify-otp`, {
-        method: "POST",
+      const { ok, data } = await verifyOtp(email, otp);
 
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          email,
-          otp,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
+      if (ok) {
         toast.success("Account created successfully");
 
         router.push("/login");
@@ -83,6 +56,7 @@ export default function RegisterPage() {
         toast.error(data.message);
       }
     } catch (error) {
+      console.error(error);
       toast.error("OTP verification failed");
     } finally {
       setLoading(false);

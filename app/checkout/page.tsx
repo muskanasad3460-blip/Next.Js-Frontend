@@ -1,6 +1,7 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
+import { placeOrder } from "@/src/lib/order";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -74,17 +75,16 @@ export default function CheckoutPage() {
       if (!formData.phone.trim()) {
         return toast.error("Phone number is required");
       }
-
       if (!formData.email.trim()) {
         return toast.error("Email is required");
       }
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(formData.email)) {
         return toast.error("Invalid email address");
       }
 
-      // SAVE FOR NEXT TIME
+      // save checkout data
       localStorage.setItem("checkoutData", JSON.stringify(formData));
 
       const orderData = {
@@ -94,29 +94,17 @@ export default function CheckoutPage() {
         subtotal,
       };
 
-      const res = await fetch(
-        "https://3b1e-39-35-157-120.ngrok-free.app/api/orders",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(orderData),
-        }
-      );
+      const { ok, data } = await placeOrder(orderData);
 
-      const data = await res.json();
-
-      if (!res.ok) {
+      if (!ok) {
         return toast.error(data.message);
       }
 
       toast.success("Order placed successfully");
-
       router.push("/success");
     } catch (error: any) {
       console.error(error);
-      alert(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -253,7 +241,7 @@ export default function CheckoutPage() {
                 const imageSrc = item.image
                   ? item.image.startsWith("http")
                     ? item.image
-                    : `https://3b1e-39-35-157-120.ngrok-free.app${item.image}`
+                    : `${process.env.NEXT_PUBLIC_API_URL}${item.image}`
                   : "/n1.jpg";
 
                 return (

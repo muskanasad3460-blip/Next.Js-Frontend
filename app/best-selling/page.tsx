@@ -1,24 +1,17 @@
 "use client";
 import ProductCardss from "@/components/products/ProductCardss";
+import { getBestSellingProducts } from "@/src/lib/Product";
 import React, { useEffect, useState } from "react";
 
 export default function BestSellingPage() {
   const [products, setProducts] = useState<any[]>([]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/apiproducts//best-selling`
-        );
-        const data = await res.json();
-
-        setProducts(data);
-      } catch (error) {
-        console.log(error);
-      }
+    const loadProducts = async () => {
+      const data = await getBestSellingProducts();
+      setProducts(data);
     };
-    fetchProducts();
+    loadProducts();
   }, []);
 
   return (

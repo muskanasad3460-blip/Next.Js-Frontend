@@ -7,63 +7,42 @@ import { useParams, useRouter } from "next/navigation";
 import { Heart, Minus, Plus, Truck, RotateCcw } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 
-const sizes = ["XS", "S", "M", "L", "XL"];
+import { getMainImage, getProductImages, apiUrl } from "@/src/lib/image";
+import { getProductById } from "@/src/lib/Product";
 
+const sizes = ["XS", "S", "M", "L", "XL"];
 const colors = ["bg-blue-500", "bg-red-500"];
 
 export default function ProductPage() {
   const { id } = useParams();
+  const router = useRouter();
 
   const [product, setProduct] = useState<any>(null);
-
   const [mainImage, setMainImage] = useState("");
-
   const [selectedSize, setSelectedSize] = useState("M");
-
   const [selectedColor, setSelectedColor] = useState(colors[0]);
-
   const [qty, setQty] = useState(1);
-  const router = useRouter();
+
   const { setBuyNowItem, clearCart } = useCart();
 
+  // =========================
   // FETCH PRODUCT
-  //
+  // =========================
   useEffect(() => {
-    async function fetchProduct() {
-      try {
-        const res = await fetch(
-          `https://3b1e-39-35-157-120.ngrok-free.app/api/products/${id}`
-        );
+    async function loadProduct() {
+      if (!id) return;
 
-        const data = await res.json();
+      const data = await getProductById(String(id));
 
-        setProduct(data);
+      if (!data) return;
 
-        // ✅ MAIN IMAGE FROM MULTIPLE IMAGES
-        if (data.images && data.images.length > 0) {
-          setMainImage(
-            `https://3b1e-39-35-157-120.ngrok-free.app${data.images[0].url}`
-          );
-        } else if (data.image) {
-          setMainImage(
-            `https://3b1e-39-35-157-120.ngrok-free.app${data.image}`
-          );
-        } else {
-          setMainImage("/n1.jpg");
-        }
-      } catch (error) {
-        console.log(error);
-      }
+      setProduct(data);
+      setMainImage(getMainImage(data));
     }
 
-    if (id) {
-      fetchProduct();
-    }
+    loadProduct();
   }, [id]);
 
-  //
-  // LOADING
-  //
   if (!product) {
     return (
       <div className="h-screen flex items-center justify-center">
@@ -72,41 +51,24 @@ export default function ProductPage() {
     );
   }
 
-  //
-  // MULTIPLE THUMBNAILS
-  //
-  const images =
-    product?.images?.length > 0
-      ? product.images.map(
-          (img: any) => `https://3b1e-39-35-157-120.ngrok-free.app${img.url}`
-        )
-      : product?.image
-      ? [`https://3b1e-39-35-157-120.ngrok-free.app${product.image}`]
-      : ["/n1.jpg"];
+  const images = getProductImages(product);
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 py-10">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* ================= LEFT ================= */}
+        {/* LEFT */}
         <div className="flex gap-4">
           {/* THUMBNAILS */}
           <div className="flex flex-col gap-4">
-            {images.map((img: string, i: number) => (
+            {images.map((img, i) => (
               <button
                 key={i}
                 onClick={() => setMainImage(img)}
-                className={`w-20 h-20 rounded-xl overflow-hidden  transition ${
-                  mainImage === img ? " scale-105" : "border-gray-200"
+                className={`w-20 h-20 rounded-xl overflow-hidden ${
+                  mainImage === img ? "border border-black scale-105" : ""
                 }`}
               >
-                <Image
-                  src={img}
-                  alt={product?.name || "thumbnail"}
-                  width={80}
-                  height={80}
-                  sizes="80px"
-                  className="w-full h-full object-cover"
-                />
+                <Image src={img} alt="thumb" width={80} height={80} />
               </button>
             ))}
           </div>
@@ -115,52 +77,32 @@ export default function ProductPage() {
           <div className="flex-1 bg-gray-100 rounded-2xl p-6 flex items-center justify-center">
             <Image
               src={mainImage}
-              alt={product?.name || "product-image"}
+              alt={product.name}
               width={500}
               height={500}
-              priority
-              sizes="(max-width: 768px) 100vw, 50vw"
               className="object-contain h-[450px]"
             />
           </div>
         </div>
 
-        {/* ================= RIGHT ================= */}
+        {/* RIGHT */}
         <div className="space-y-6">
-          {/* TITLE */}
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
+          <h1 className="text-3xl font-bold">{product.name}</h1>
 
-            <div className="flex items-center gap-3 mt-2 text-sm text-gray-500">
-              <span className="text-yellow-500">⭐⭐⭐⭐☆</span>
+          <div className="text-3xl font-bold">${product.price}</div>
 
-              <span>({product.reviews || 0} Reviews)</span>
-
-              <span className="w-1 h-1 rounded-full bg-gray-400"></span>
-
-              <span className="text-green-600 font-medium">In Stock</span>
-            </div>
-          </div>
-
-          {/* PRICE */}
-          <div className="text-3xl font-bold text-gray-900">
-            ${product.price}
-          </div>
-
-          {/* DESCRIPTION */}
-          <p className="text-gray-600 leading-7">{product.description}</p>
+          <p className="text-gray-600">{product.description}</p>
 
           {/* COLORS */}
-          <div className="space-y-3">
-            <h3 className="font-semibold text-gray-800">Colours</h3>
-
+          <div>
+            <h3 className="font-semibold mb-2">Colors</h3>
             <div className="flex gap-3">
-              {colors.map((color, i) => (
+              {colors.map((color) => (
                 <button
-                  key={i}
+                  key={color}
                   onClick={() => setSelectedColor(color)}
-                  className={`w-8 h-8 rounded-full border-4 ${color} ${
-                    selectedColor === color ? "border-black" : "border-white"
+                  className={`w-8 h-8 rounded-full ${color} ${
+                    selectedColor === color ? "border-2 border-black" : ""
                   }`}
                 />
               ))}
@@ -168,18 +110,15 @@ export default function ProductPage() {
           </div>
 
           {/* SIZES */}
-          <div className="space-y-3">
-            <h3 className="font-semibold text-gray-800">Size</h3>
-
+          <div>
+            <h3 className="font-semibold mb-2">Size</h3>
             <div className="flex gap-3">
               {sizes.map((size) => (
                 <button
                   key={size}
                   onClick={() => setSelectedSize(size)}
-                  className={`px-4 py-2 border rounded-lg text-sm font-medium ${
-                    selectedSize === size
-                      ? "bg-black text-white border-black"
-                      : "hover:bg-gray-100"
+                  className={`px-4 py-2 border ${
+                    selectedSize === size ? "bg-black text-white" : ""
                   }`}
                 >
                   {size}
@@ -188,76 +127,49 @@ export default function ProductPage() {
             </div>
           </div>
 
-          {/* ACTIONS */}
-          <div className="flex flex-wrap items-center gap-4 pt-2">
-            {/* QTY */}
-            <div className="flex items-center border rounded-xl overflow-hidden">
-              <button
-                onClick={() => qty > 1 && setQty(qty - 1)}
-                className="px-4 py-3 hover:bg-gray-100"
-              >
-                <Minus size={18} />
+          {/* QTY */}
+          <div className="flex items-center gap-4">
+            <div className="flex border">
+              <button onClick={() => qty > 1 && setQty(qty - 1)}>
+                <Minus size={16} />
               </button>
 
-              <div className="px-5 font-semibold">{qty}</div>
+              <div className="px-4">{qty}</div>
 
-              <button
-                onClick={() => setQty(qty + 1)}
-                className="px-4 py-3 hover:bg-gray-100"
-              >
-                <Plus size={18} />
+              <button onClick={() => setQty(qty + 1)}>
+                <Plus size={16} />
               </button>
             </div>
 
-            {/* BUY */}
-            {/* BUY */}
             <button
-              className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-xl font-medium"
-              onClick={(e) => {
-                e.stopPropagation();
-
+              onClick={() => {
                 clearCart();
-
-                setBuyNowItem({
-                  ...product,
-                  quantity: qty,
-                });
-
+                setBuyNowItem({ ...product, quantity: qty });
                 router.push("/checkout");
               }}
+              className="bg-red-500 text-white px-8 py-3 rounded"
             >
               Buy Now
             </button>
 
-            {/* WISHLIST */}
-            <button className="border p-3 rounded-xl hover:bg-gray-100">
-              <Heart size={20} />
-            </button>
+            <Heart size={18} />
           </div>
 
           {/* DELIVERY */}
-          <div className="border rounded-2xl overflow-hidden mt-8">
-            <div className="flex gap-4 p-5 border-b">
-              <Truck className="w-6 h-6 text-gray-700" />
-
+          <div className="border p-4 space-y-4">
+            <div className="flex gap-3">
+              <Truck />
               <div>
-                <h4 className="font-semibold text-gray-900">Free Delivery</h4>
-
-                <p className="text-sm text-gray-500 mt-1">
-                  Enter your postal code for delivery availability.
-                </p>
+                <p className="font-semibold">Free Delivery</p>
+                <p className="text-sm text-gray-500">Enter postal code</p>
               </div>
             </div>
 
-            <div className="flex gap-4 p-5">
-              <RotateCcw className="w-6 h-6 text-gray-700" />
-
+            <div className="flex gap-3">
+              <RotateCcw />
               <div>
-                <h4 className="font-semibold text-gray-900">Return Delivery</h4>
-
-                <p className="text-sm text-gray-500 mt-1">
-                  Free 30 days delivery returns.
-                </p>
+                <p className="font-semibold">Return Policy</p>
+                <p className="text-sm text-gray-500">30 days return</p>
               </div>
             </div>
           </div>

@@ -23,6 +23,12 @@ const nextConfig = {
         hostname: "images.unsplash.com",
         pathname: "/**",
       },
+      // UNSPLASH apis
+      {
+        protocol: "https",
+        hostname: "3b1e-39-35-157-120.ngrok-free.app",
+        pathname: "/**",
+      },
     ],
     dangerouslyAllowLocalIP: true,
   },

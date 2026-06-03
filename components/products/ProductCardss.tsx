@@ -13,8 +13,11 @@ export default function ProductCardss({ item }: any) {
   const { addToCart, cart } = useCart();
 
   // ✅ IMAGE FIX
+  // const imageSrc = item.image
+  //   ? `https://3b1e-39-35-157-120.ngrok-free.app${item.image}`
+  //   : "/placeholder.png";
   const imageSrc = item.image
-    ? `https://3b1e-39-35-157-120.ngrok-free.app${item.image}`
+    ? `${process.env.NEXT_PUBLIC_API_URL}${item.image}`
     : "/placeholder.png";
 
   const isAdded = cart.some((cartItem: any) => cartItem.id === item.id);

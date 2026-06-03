@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import ProductCard from "./FlashSaleCard";
+import { getFlashSaleProducts } from "@/src/lib/Product";
 
 export default function ProductSlider() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -10,30 +11,12 @@ export default function ProductSlider() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/products/flash-sale`
-        );
-
-        const data = await res.json();
-
-        console.log("🔥 FULL RESPONSE:", data);
-
-        setProducts(Array.isArray(data) ? data : data?.products || []);
-        // ensure array
-        // setProducts(Array.isArray(data) ? data : []);
-        console.log("🧾 FIRST PRODUCT:", data?.[0]);
-        console.log("🖼 IMAGE FIELD:", data?.[0]?.image);
-      } catch (error) {
-        console.log("Error fetching products:", error);
-        setProducts([]);
-      } finally {
-        setLoading(false);
-      }
+    const loadProducts = async () => {
+      const data = await getFlashSaleProducts();
+      setProducts(data);
+      setLoading(false);
     };
-
-    fetchProducts();
+    loadProducts();
   }, []);
 
   const scrollLeft = () => {

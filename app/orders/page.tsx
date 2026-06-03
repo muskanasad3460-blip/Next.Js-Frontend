@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { PackageCheck, Truck, Clock3, XCircle } from "lucide-react";
 import toast from "react-hot-toast";
+import { deleteOrder, getOrders } from "@/src/lib/order";
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<any[]>([]);
@@ -16,12 +17,9 @@ export default function OrdersPage() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch(
-        "https://3b1e-39-35-157-120.ngrok-free.app/api/orders"
-      );
-      const data = await res.json();
+      const { ok, data } = await getOrders();
 
-      if (!res.ok) return toast.error(data.message);
+      if (!ok) return toast.error(data.message);
 
       setOrders(data.orders);
     } catch {
@@ -33,16 +31,9 @@ export default function OrdersPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = await fetch(
-        `https://3b1e-39-35-157-120.ngrok-free.app/api/orders/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const { ok, data } = await deleteOrder(id);
 
-      const data = await res.json();
-
-      if (!res.ok) return toast.error(data.message);
+      if (!ok) return toast.error(data.message);
 
       toast.success("Order deleted");
 
@@ -123,7 +114,7 @@ export default function OrdersPage() {
               const imageSrc = firstProduct?.image
                 ? firstProduct.image.startsWith("http")
                   ? firstProduct.image
-                  : `https://3b1e-39-35-157-120.ngrok-free.app${firstProduct.image}`
+                  : `${process.env.NEXT_PUBLIC_API_URL}${firstProduct.image}`
                 : "/n1.jpg";
 
               return (

@@ -1,13 +1,12 @@
 "use client";
 
 import { useCart } from "@/context/CartContext";
+import { getExploreProducts } from "@/src/lib/Product";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { FaEye, FaHeart, FaRegStar, FaStar } from "react-icons/fa";
 import { IoArrowBack, IoArrowForward } from "react-icons/io5";
-
-const API = "https://3b1e-39-35-157-120.ngrok-free.app";
 
 function RatingStars({ rating }: { rating: number }) {
   return (
@@ -33,19 +32,11 @@ export default function ExploreProductSection() {
   const { addToCart, cart } = useCart();
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(`${API}/api/products/explore`);
-
-        const data = await res.json();
-
-        setProducts(data);
-      } catch (error) {
-        console.log(error);
-      }
+    const loadProducts = async () => {
+      const data = await getExploreProducts();
+      setProducts(data);
     };
-
-    fetchProducts();
+    loadProducts();
   }, []);
 
   const scrollLeft = () => {
@@ -95,9 +86,12 @@ export default function ExploreProductSection() {
             const image =
               product.images?.[0]?.url || product.image || "/placeholder.png";
 
+            // const imageSrc = image.startsWith("http")
+            //   ? image
+            //   : `${API}${image}`;
             const imageSrc = image.startsWith("http")
               ? image
-              : `${API}${image}`;
+              : `${process.env.NEXT_PUBLIC_API_URL}${image}`;
 
             const isAdded = cart.some((item: any) => item.id === product.id);
 

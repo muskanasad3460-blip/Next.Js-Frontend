@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { getOrderById, getOrders } from "@/src/lib/order";
 
 export default function OrderDetailsPage() {
   const params = useParams();
@@ -19,18 +20,12 @@ export default function OrderDetailsPage() {
 
     const fetchOrder = async () => {
       try {
-        const res = await fetch(
-          `https://3b1e-39-35-157-120.ngrok-free.app/api/orders/${id}`
-        );
+        const { ok, data } = await getOrderById(id);
 
-        const data = await res.json();
-
-        if (!res.ok) {
-          return toast.error(data.message);
-        }
+        if (!ok) return toast.error(data.message);
 
         setOrder(data.order);
-      } catch (error) {
+      } catch {
         toast.error("Failed to load order");
       } finally {
         setLoading(false);
@@ -76,9 +71,8 @@ export default function OrderDetailsPage() {
             const imageSrc = product.image
               ? product.image.startsWith("http")
                 ? product.image
-                : `https://3b1e-39-35-157-120.ngrok-free.app${product.image}`
+                : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
               : "/n1.jpg";
-
             return (
               <div key={i} className="flex justify-between">
                 <div className="flex gap-4">

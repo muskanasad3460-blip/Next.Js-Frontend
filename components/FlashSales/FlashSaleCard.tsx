@@ -25,8 +25,11 @@ export default function ProductCard({ item }: { item: Product }) {
 
   const isAdded = cart.some((cartItem: any) => cartItem.id === item.id);
 
+  // const imageSrc = item.image
+  //   ? `https://3b1e-39-35-157-120.ngrok-free.app${item.image}`
+  //   : "/n1.jpg";
   const imageSrc = item.image
-    ? `https://3b1e-39-35-157-120.ngrok-free.app${item.image}`
+    ? `${process.env.NEXT_PUBLIC_API_URL}${item.image}`
     : "/n1.jpg";
 
   return (

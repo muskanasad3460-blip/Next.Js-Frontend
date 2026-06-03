@@ -13,6 +13,7 @@ import {
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { getProfile } from "@/src/lib/User";
 
 export default function Navbar() {
   const { cartCount, openCart } = useCart();
@@ -57,19 +58,7 @@ export default function Navbar() {
 
   const fetchProfile = async () => {
     try {
-      const token = localStorage.getItem("token");
-
-      const res = await fetch(
-        "https://3b1e-39-35-157-120.ngrok-free.app/api/user/me",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          credentials: "include",
-        }
-      );
-
-      const data = await res.json();
+      const data = await getProfile();
 
       if (data.success) {
         setUser(data.user);

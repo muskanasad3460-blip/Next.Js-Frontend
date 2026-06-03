@@ -1,11 +1,10 @@
 "use client";
 
+import { loginUser } from "@/src/lib/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { FiMail, FiLock } from "react-icons/fi";
-
-const API = "https://3b1e-39-35-157-120.ngrok-free.app";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,30 +18,13 @@ export default function LoginPage() {
   const handleLogin = async () => {
     try {
       setLoading(true);
-
-      const res = await fetch(`${API}/api/auth/login`, {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
+      const { ok, data } = await loginUser(email, password);
+      if (ok) {
         localStorage.setItem("token", data.token);
-
-        toast.success("Login Successful");
-
+        toast.success("Login Successfully");
         router.push("/");
       } else {
-        toast.error(data.message || "Invalid credentials");
+        toast.error(data.message || "Invalid Credentials");
       }
     } catch (error) {
       toast.error("Login failed");
