@@ -5,6 +5,7 @@ import { FaEye, FaHeart } from "react-icons/fa";
 import Rating from "./Rating";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
+import { getImageUrl } from "@/src/lib/image";
 
 type Product = {
   id: string;
@@ -25,12 +26,7 @@ export default function ProductCard({ item }: { item: Product }) {
 
   const isAdded = cart.some((cartItem: any) => cartItem.id === item.id);
 
-  // const imageSrc = item.image
-  //   ? `https://3b1e-39-35-157-120.ngrok-free.app${item.image}`
-  //   : "/n1.jpg";
-  const imageSrc = item.image
-    ? `${process.env.NEXT_PUBLIC_API_URL}${item.image}`
-    : "/n1.jpg";
+  const imageSrc = getImageUrl(item.image);
 
   return (
     <div

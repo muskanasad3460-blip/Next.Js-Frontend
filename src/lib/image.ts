@@ -9,9 +9,6 @@ export function getImageUrl(path?: string | null): string {
   return `${BASE_URL}${path}`;
 }
 
-/**
- * Product main image
- */
 export function getMainImage(product: any): string {
   if (product?.images?.length > 0) {
     return getImageUrl(product.images[0].url);

@@ -2,6 +2,7 @@
 
 import { useCart } from "@/context/CartContext";
 import { getExploreProducts } from "@/src/lib/Product";
+import { getImageUrl } from "@/src/lib/image";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
@@ -24,12 +25,10 @@ function RatingStars({ rating }: { rating: number }) {
 
 export default function ExploreProductSection() {
   const [products, setProducts] = useState<any[]>([]);
-
   const scrollRef = useRef<HTMLDivElement>(null);
-
   const router = useRouter();
 
-  const { addToCart, cart } = useCart();
+  const { addToCart, cart, setBuyNowItem, clearCart } = useCart();
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -86,12 +85,7 @@ export default function ExploreProductSection() {
             const image =
               product.images?.[0]?.url || product.image || "/placeholder.png";
 
-            // const imageSrc = image.startsWith("http")
-            //   ? image
-            //   : `${API}${image}`;
-            const imageSrc = image.startsWith("http")
-              ? image
-              : `${process.env.NEXT_PUBLIC_API_URL}${image}`;
+            const imageSrc = getImageUrl(image);
 
             const isAdded = cart.some((item: any) => item.id === product.id);
 
@@ -156,22 +150,22 @@ export default function ExploreProductSection() {
                       Add to Cart
                     </button>
 
-                    {/* BUY NOW */}
+                    {/* BUY NOW (FIXED) */}
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
 
-                        router.push(
-                          `/checkout?buyNow=${encodeURIComponent(
-                            JSON.stringify({
-                              id: product.id,
-                              name: product.name,
-                              price: product.price,
-                              image: product.image,
-                              quantity: 1,
-                            })
-                          )}`
-                        );
+                        clearCart();
+
+                        setBuyNowItem({
+                          id: product.id,
+                          name: product.name,
+                          price: product.price,
+                          image: product.image,
+                          quantity: 1,
+                        });
+
+                        router.push("/checkout");
                       }}
                       className="w-1/2 py-3 bg-[#DB4444] text-white font-medium hover:bg-red-600 transition"
                     >
