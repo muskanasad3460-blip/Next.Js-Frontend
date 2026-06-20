@@ -3,6 +3,13 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // =========================
+// FETCH OPTIONS
+// =========================
+const options = {
+  credentials: "include" as RequestCredentials,
+};
+
+// =========================
 // PLACE ORDER
 // =========================
 export const placeOrder = async (orderData: any) => {
@@ -12,6 +19,7 @@ export const placeOrder = async (orderData: any) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(orderData),
     });
 
@@ -34,7 +42,9 @@ export const placeOrder = async (orderData: any) => {
 // =========================
 export const getOrders = async () => {
   try {
-    const res = await fetch(`${API_URL}/api/orders`);
+    const res = await fetch(`${API_URL}/api/orders`, {
+      ...options,
+    });
 
     const data = await res.json();
 
@@ -55,7 +65,9 @@ export const getOrders = async () => {
 // =========================
 export const getOrderById = async (id: string) => {
   try {
-    const res = await fetch(`${API_URL}/api/orders/${id}`);
+    const res = await fetch(`${API_URL}/api/orders/${id}`, {
+      ...options,
+    });
 
     const data = await res.json();
 
@@ -78,6 +90,7 @@ export const deleteOrder = async (id: string) => {
   try {
     const res = await fetch(`${API_URL}/api/orders/${id}`, {
       method: "DELETE",
+      ...options,
     });
 
     const data = await res.json();

@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { getOrderById, getOrders } from "@/src/lib/order";
+import { getOrderById } from "@/src/lib/order";
 
 export default function OrderDetailsPage() {
   const params = useParams();
 
-  // ✅ FIXED
   const id = String(params?.id || "");
 
   const [order, setOrder] = useState<any>(null);
@@ -22,10 +21,13 @@ export default function OrderDetailsPage() {
       try {
         const { ok, data } = await getOrderById(id);
 
-        if (!ok) return toast.error(data.message);
+        if (!ok) {
+          toast.error(data.message);
+          return;
+        }
 
         setOrder(data.order);
-      } catch {
+      } catch (error) {
         toast.error("Failed to load order");
       } finally {
         setLoading(false);
@@ -56,43 +58,71 @@ export default function OrderDetailsPage() {
       <div className="max-w-5xl mx-auto bg-white rounded-3xl p-8">
         <h1 className="text-4xl font-bold mb-2">Order Details</h1>
 
-        {/* ✅ FIXED: id */}
-        <p className="text-gray-500 mb-6">Order ID: {order.id}</p>
+        <p className="text-gray-500 mb-8">Order ID: {order.id}</p>
 
-        <div className="mb-10">
+        {/* CUSTOMER */}
+        <div className="mb-10 space-y-1">
+          <h2 className="font-bold text-xl">Customer</h2>
+
           <p>{order.firstName}</p>
+
           <p>{order.email}</p>
+
           <p>{order.phone}</p>
+
           <p>{order.city}</p>
         </div>
 
+        {/* PRODUCTS */}
+
         <div className="space-y-5">
-          {order.products.map((product: any, i: number) => {
-            const imageSrc = product.image
-              ? product.image.startsWith("http")
-                ? product.image
-                : `${process.env.NEXT_PUBLIC_API_URL}${product.image}`
+          {order.orderItems?.map((item: any, i: number) => {
+            const product = item.product;
+
+            const imageSrc = product?.images?.[0]?.url
+              ? product.images[0].url.startsWith("http")
+                ? product.images[0].url
+                : `${process.env.NEXT_PUBLIC_API_URL}${product.images[0].url}`
               : "/n1.jpg";
+
             return (
-              <div key={i} className="flex justify-between">
-                <div className="flex gap-4">
-                  <Image
-                    src={imageSrc}
-                    alt={product.name}
-                    width={60}
-                    height={60}
-                  />
+              <div
+                key={i}
+                className="flex justify-between items-center border-b pb-5"
+              >
+                <div className="flex gap-4 items-center">
+                  <div className="w-20 h-20 bg-gray-100 rounded-xl overflow-hidden">
+                    <img
+                      src={imageSrc}
+                      alt={product?.name || "product"}
+                      className="object-contain w-full h-full"
+                    />
+                  </div>
+
                   <div>
-                    <h3>{product.name}</h3>
-                    <p>Qty: {product.quantity}</p>
+                    <h3 className="font-semibold">{product?.name}</h3>
+
+                    <p className="text-gray-500">Qty: {item.quantity}</p>
+
+                    <p className="text-gray-500">${item.unitPrice}</p>
                   </div>
                 </div>
 
-                <div>${product.price * product.quantity}</div>
+                <div className="font-bold">
+                  ${item.unitPrice * item.quantity}
+                </div>
               </div>
             );
           })}
         </div>
+
+        {/* TOTAL */}
+        {/* 
+        <div className="mt-10 border-t pt-5 flex justify-between text-xl font-bold">
+          <span>Total</span>
+
+          <span>${order.subtotal}</span>
+        </div> */}
       </div>
     </div>
   );

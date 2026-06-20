@@ -1,10 +1,10 @@
 "use client";
 
-import { loginUser } from "@/src/lib/auth";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { FiMail, FiLock } from "react-icons/fi";
+import { createApiClient } from "@/src/api/createApiClient";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -14,20 +14,32 @@ export default function LoginPage() {
 
   const [loading, setLoading] = useState(false);
 
+  // =========================
   // LOGIN
+  // =========================
   const handleLogin = async () => {
     try {
       setLoading(true);
-      const { ok, data } = await loginUser(email, password);
-      if (ok) {
-        localStorage.setItem("token", data.token);
-        toast.success("Login Successfully");
-        router.push("/");
-      } else {
-        toast.error(data.message || "Invalid Credentials");
+
+      const data = await createApiClient({
+        path: "/api/auth/login",
+        method: "POST",
+        body: {
+          email,
+          password,
+        },
+      });
+
+      if (!data.success) {
+        toast.error(data.message || "Invalid credentials");
+        return;
       }
-    } catch (error) {
-      toast.error("Login failed");
+
+      toast.success("Login Successfully 🚀");
+
+      router.replace("/");
+    } catch (error: any) {
+      toast.error(error.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -69,11 +81,11 @@ export default function LoginPage() {
           />
         </div>
 
-        {/* BUTTON */}
+        {/* LOGIN BUTTON */}
         <button
           onClick={handleLogin}
           disabled={loading}
-          className="w-full bg-black text-white py-3 rounded-xl font-medium hover:opacity-90 transition"
+          className="w-full bg-black text-white py-3 rounded-xl font-medium hover:opacity-90 disabled:opacity-50 transition"
         >
           {loading ? "Logging in..." : "Login"}
         </button>

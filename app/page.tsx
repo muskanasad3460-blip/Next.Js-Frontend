@@ -8,6 +8,7 @@ import MusicBanner from "@/components/MusicBanner/MusicBanner";
 import ExploreProductSection from "@/components/ExploreProductSection";
 import NewArrival from "@/components/Arrival/NewArrival";
 import Footer from "@/components/Footer/Footer";
+import { redirect } from "next/navigation";
 
 export default function Page() {
   return (

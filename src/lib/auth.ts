@@ -1,22 +1,48 @@
+import { createApiClient } from "../api/createApiClient";
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // LOGIN
-export const loginUser = async (email: string, password: string) => {
-  const res = await fetch(`${API_URL}/api/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-  });
+// export const loginUser = async (email: string, password: string) => {
+//   const res = await fetch(`${API_URL}/api/auth/login`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       email,
+//       password,
+//     }),
+//   });
 
-  return {
-    ok: res.ok,
-    data: await res.json(),
-  };
+//   return {
+//     ok: res.ok,
+//     data: await res.json(),
+//   };
+// };
+
+export const loginUser = async (email: string, password: string) => {
+  try {
+    const data = await createApiClient({
+      path: "/api/auth/login",
+      method: "POST",
+      body: {
+        email,
+        password,
+      },
+    });
+    return {
+      ok: true,
+      data,
+    };
+  } catch (error: any) {
+    return {
+      ok: false,
+      data: {
+        message: error.message,
+      },
+    };
+  }
 };
 
 // SEND OTP

@@ -114,7 +114,7 @@ export default function ProfileCard() {
         return;
       }
 
-      // SUCCESS
+      // SUCCESSxa
       if (res.success) {
         setUser(res.user);
 
@@ -155,17 +155,16 @@ export default function ProfileCard() {
           {/* IMAGE */}
           <div className="relative shrink-0">
             <div className="w-24 h-24 rounded-full overflow-hidden relative border border-gray-200">
-              <Image
+              <img
                 src={
                   user?.avatar
-                    ? `https://3b1e-39-35-157-120.ngrok-free.app${
+                    ? `${process.env.NEXT_PUBLIC_API_URL}${
                         user.avatar
                       }?t=${Date.now()}`
                     : "/c1.jpg"
                 }
                 alt="profile"
-                fill
-                className="object-cover"
+                className="w-24 h-24 rounded-full object-cover"
               />
             </div>
 

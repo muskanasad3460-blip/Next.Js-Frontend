@@ -1,31 +1,10 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// =========================
-// TOKEN HELPER
-// =========================
-const getToken = () => {
-  if (typeof window !== "undefined") {
-    return localStorage.getItem("token");
-  }
-
-  return null;
-};
-
-// =========================
-// AUTH HEADERS
-// =========================
-const getAuthHeaders = () => ({
-  Authorization: `Bearer ${getToken()}`,
-});
-
-// =========================
-// GET PROFILE
-// =========================
 export async function getProfile() {
   try {
     const res = await fetch(`${API_URL}/api/user/me`, {
       method: "GET",
-      headers: getAuthHeaders(),
+      credentials: "include",
     });
 
     return await res.json();
@@ -39,14 +18,11 @@ export async function getProfile() {
   }
 }
 
-// =========================
-// UPDATE PROFILE
-// =========================
 export async function updateProfile(formData: FormData) {
   try {
     const res = await fetch(`${API_URL}/api/user/profile`, {
       method: "PUT",
-      headers: getAuthHeaders(),
+      credentials: "include",
       body: formData,
     });
 
@@ -68,7 +44,7 @@ export async function getAddress() {
   try {
     const res = await fetch(`${API_URL}/api/address`, {
       method: "GET",
-      headers: getAuthHeaders(),
+      credentials: "include",
     });
 
     return await res.json();
@@ -94,9 +70,9 @@ export async function updateAddress(data: {
   try {
     const res = await fetch(`${API_URL}/api/address`, {
       method: "PUT",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        ...getAuthHeaders(),
       },
       body: JSON.stringify(data),
     });

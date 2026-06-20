@@ -238,10 +238,9 @@ export default function CheckoutPage() {
           <div className="pt-20">
             <div className="space-y-5">
               {productsToShow.map((item, index) => {
-                const imageSrc = item.image
-                  ? item.image.startsWith("http")
-                    ? item.image
-                    : `${process.env.NEXT_PUBLIC_API_URL}${item.image}`
+                console.log("fvbngfds", productsToShow);
+                const imageSrc = item.images?.[0]?.url
+                  ? `${process.env.NEXT_PUBLIC_API_URL}${item.images[0].url}`
                   : "/n1.jpg";
 
                 return (

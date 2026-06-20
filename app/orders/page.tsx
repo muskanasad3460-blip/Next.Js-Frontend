@@ -109,12 +109,12 @@ export default function OrdersPage() {
         ) : (
           <div className="space-y-6">
             {orders.map((order) => {
-              const firstProduct = order.products?.[0];
+              const firstProduct = order.orderItems?.[0]?.product;
 
-              const imageSrc = firstProduct?.image
-                ? firstProduct.image.startsWith("http")
-                  ? firstProduct.image
-                  : `${process.env.NEXT_PUBLIC_API_URL}${firstProduct.image}`
+              const imageSrc = firstProduct?.images?.[0]?.url
+                ? firstProduct.images[0].url.startsWith("http")
+                  ? firstProduct.images[0].url
+                  : `${process.env.NEXT_PUBLIC_API_URL}${firstProduct.images[0].url}`
                 : "/n1.jpg";
 
               return (
